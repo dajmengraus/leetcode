@@ -9,13 +9,17 @@ var topKFrequent = function(nums, k) {
         count.set(n, (count.get(n) || 0) + 1);
     }
 
-    let freq = Array.from(count).sort((a, b) => a[1] - b[1]);
+    let buckets = Array(nums.length + 1).fill(null).map(() => []);
+
+    for (let [num, freq] of count) {
+        buckets[freq].push(num);
+    }
 
     let result = [];
 
-    for (let i = freq.length - 1; i >= freq.length - k; i--) {
-        result.push(freq[i][0]);
+    for (let i = buckets.length - 1; i >= 0 || result.length < k; i--) {
+        result.push(...buckets[i]);
     }
 
-    return result;
+    return result.slice(0, k);
 };
